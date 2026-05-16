@@ -243,7 +243,7 @@ def format_digest(papers_dict: dict, topic_map: dict, claude_scores: dict, today
     lines = [
         f"# ArXiv Digest — {today.strftime('%B %d, %Y')}",
         f"*Generated: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}*",
-        f"*Date Range: Past 7 days*",
+        "*Date Range: Past 7 days*",
         f"*Filtered by: Claude relevance scoring (threshold {relevance_threshold}+)*",
         "",
     ]
