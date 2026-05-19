@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /Users/marquisehumphreys/AI-Knowledgebase && STATUS=$(git status --porcelain 2>/dev/null) && if [ -n \"$STATUS\" ]; then FILES=$(echo \"$STATUS\" | awk '{print $2}' | head -3 | paste -sd ','); git add -A && git commit -m \"auto: save session changes — $FILES\" --quiet && git push origin main --quiet; fi 2>/dev/null || true",
+            "statusMessage": "Auto-saving to GitHub..."
+          }
+        ]
+      }
+    ]
+  }
+}
