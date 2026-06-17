@@ -1,0 +1,47 @@
+name: ArXiv Weekly Digest
+
+on:
+  schedule:
+    # Run every Friday at 8:00 AM UTC
+    - cron: '0 8 * * 5'
+
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  generate-digest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests anthropic
+
+      - name: Run ArXiv scraper
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python .scripts/arxiv-scraper.py
+
+      - name: Configure Git
+        run: |
+          git config user.email "arxiv-bot@github.com"
+          git config user.name "ArXiv Digest Bot"
+
+      - name: Commit and push digest
+        run: |
+          git add raw/arxiv-papers/ || true
+          git diff --cached --quiet || (git commit -m "docs: add ArXiv weekly digest (Claude-scored KB relevance)" && git push origin main)
